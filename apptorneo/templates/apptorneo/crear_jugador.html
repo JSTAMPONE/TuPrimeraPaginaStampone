@@ -1,0 +1,22 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}
+Página de Jugadores
+{% endblock %} 
+{% block content %} 
+<h1>Bienvenido a la página de jugadores</h1> 
+<p>Completa los siguientes datos para incluir al jugador de tu equipo.</p> 
+
+{% if mensaje %}
+    <p>{{ mensaje }}</p>
+{% endif %}
+
+<form action="/crear_jugador/" method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="mb-3"> 
+    {{ form.as_p }}
+    </div> 
+    <button type="submit" class="btn btn-primary">Enviar</button> 
+</form>
+
+{% endblock %}

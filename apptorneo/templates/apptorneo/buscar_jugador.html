@@ -1,0 +1,29 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}
+Búsqueda de Jugadores
+{% endblock %} 
+{% block content %} 
+<h1>Bienvenido a la búsqueda de jugadores</h1> 
+<p>Encuentra al jugador ingresando su nombre.</p> 
+
+<form action="/buscar_jugador/" method="get" class="mt-4">
+    {% csrf_token %} 
+    <div class="mb-3"> 
+    {{ form.as_p }}
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button> 
+</form>
+
+{% if resultados %}
+    <h2>Resultados de la búsqueda:</h2>
+    <ul>
+        {% for jugador in resultados %}
+            <li>{{ jugador.nombre }} {{ jugador.apellido }} - Equipo: {{ jugador.equipo.nombre }} - Número de camiseta: {{ jugador.numero_camiseta }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+        <p>No se encontraron jugadores con ese nombre.</p>
+{% endif %}
+
+{% endblock %}
