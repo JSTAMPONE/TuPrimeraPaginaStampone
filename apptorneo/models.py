@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-
 class Equipo(models.Model):
     nombre= models.CharField(max_length=30)
     año_fundacion= models.IntegerField()
@@ -25,6 +24,8 @@ class Partido(models.Model):
     fecha= models.DateTimeField()
     goles_local= models.IntegerField()
     goles_visitante= models.IntegerField()
+    imagen = models.ImageField(upload_to='partidos', null=True, blank=True)
+
     def __str__(self):
             return f"{self.local.nombre} vs {self.visitante.nombre} {self.fecha.strftime('%d/%m/%Y %H:%M')} {self.goles_local}:{self.goles_visitante}"
     

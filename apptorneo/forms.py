@@ -1,7 +1,5 @@
 from django import forms 
-from .models import Equipo
-from .models import Jugador
-from.models import Partido
+from .models import Equipo, Jugador, Partido
 
 class EquipoForm(forms.ModelForm):
     class Meta:
@@ -16,7 +14,7 @@ class JugadorForm(forms.ModelForm):
 class PartidoForm(forms.ModelForm):
     class Meta:
         model = Partido
-        fields = ('local', 'visitante', 'fecha', 'goles_local', 'goles_visitante')
+        fields = ('local', 'visitante', 'fecha', 'goles_local', 'goles_visitante', 'imagen')
         widgets={'fecha': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M')}
 
 class BusquedaJugadorForm(forms.Form):

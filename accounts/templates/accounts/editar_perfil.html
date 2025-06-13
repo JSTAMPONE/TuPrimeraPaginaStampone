@@ -1,0 +1,18 @@
+ {% extends 'apptorneo/base.html' %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+  <h2>Editar Perfil</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h4>Datos del Usuario</h4>
+    {{ user_form.as_p }}
+
+    <h4>Datos del Perfil</h4>
+    {{ perfil_form.as_p }}
+
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+  </form>
+{% endblock %}

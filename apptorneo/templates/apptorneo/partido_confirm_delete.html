@@ -1,0 +1,12 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}Confirmar eliminación{% endblock %}
+
+{% block content %}
+  <h2>¿Estás seguro que quieres borrar el partido {{ object }}?</h2>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+    <a href="{% url 'lista_partidos' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}Lista de Partidos{% endblock %}
+
+{% block content %}
+   <h1>Lista de Partidos</h1>
+
+  {% if partidos %}
+    <ul>
+      {% for partido in partidos %}
+        <li>
+            <a href="{% url 'detalle_partido' partido.pk %}">
+                {{ partido.local }} vs {{ partido.visitante }} - {{ partido.fecha|date:"d/m/Y H:i" }}
+            </a> |
+            <a href="{% url 'editar_partido' partido.pk %}">Editar</a>
+            <a href="{% url 'borrar_partido' partido.pk %}">Borrar</a>
+            {% if partido.imagen %}
+            <br>
+            <img src="{{ partido.imagen.url }}" alt="Imagen del partido" width="200">
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay partidos todavía.</p>
+  {% endif %}
+{% endblock %}

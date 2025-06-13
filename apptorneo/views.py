@@ -1,11 +1,9 @@
 from django.shortcuts import render
-from.forms import EquipoForm
-from.models import Equipo
-from.forms import JugadorForm
-from.models import Jugador
-from.forms import PartidoForm
-from.models import Partido
-from.forms import BusquedaJugadorForm
+from.forms import EquipoForm, JugadorForm, PartidoForm, BusquedaJugadorForm
+from.models import Equipo, Jugador, Partido
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def inicio(request):
     return render(request, 'inicio.html')
@@ -46,7 +44,7 @@ def crear_jugador(request):
 
 def crear_partido(request):
     if request.method == 'POST':
-        form = PartidoForm(request.POST) 
+        form = PartidoForm(request.POST, request.FILES)
         if form.is_valid(): 
             local = form.cleaned_data['local']
             visitante = form.cleaned_data['visitante']
@@ -73,3 +71,26 @@ def buscar_jugador(request):
     else: 
         form = BusquedaJugadorForm() 
     return render(request, 'buscar_jugador.html', {'form': form})
+
+class PartidoListView(ListView):
+    model = Partido
+    context_object_name = 'partidos'
+
+class PartidoDetailView(DetailView): 
+    model = Partido
+    context_object_name = 'detalle_partido'
+
+class PartidoUpdateView(UpdateView):
+    model = Partido
+    fields = ['local', 'visitante', 'fecha', 'goles_local', 'goles_visitante', 'imagen']
+    template_name = 'apptorneo/editar_partido.html'
+    context_object_name = 'editar_partido'
+    success_url = '/'
+
+class PartidoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Partido
+    template_name = 'apptorneo/partido_confirm_delete.html'
+    success_url = reverse_lazy('lista_partidos')
+
+def about(request):
+    return render(request, 'apptorneo/about.html')

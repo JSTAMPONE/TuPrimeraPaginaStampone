@@ -11,7 +11,7 @@ Página de Partidos
     <p>{{ mensaje }}</p>
 {% endif %}
 
-<form action="/crear_partido/" method="post" class="mt-4">
+<form action="/crear_partido/" method="post" enctype="multipart/form-data" class="mt-4">
     {% csrf_token %}
     <div class="mb-3"> 
     {{ form.as_p }}

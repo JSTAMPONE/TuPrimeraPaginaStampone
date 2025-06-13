@@ -1,0 +1,22 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}Perfil de {{ user.username }}{% endblock %}
+
+{% block content %}
+  <h2>Perfil de {{ user.username }}</h2>
+
+  <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+  <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+
+  {% if perfil.avatar %}
+    <img src="{{ perfil.avatar.url }}" alt="Avatar" style="max-width: 150px; border-radius: 50%;">
+  {% else %}
+    <p>No tienes avatar cargado.</p>
+  {% endif %}
+
+  <p><strong>Biografía:</strong> {{ perfil.bio }}</p>
+  <p><strong>Fecha de nacimiento:</strong> {{ perfil.fecha_nacimiento }}</p>
+
+  <a href="{% url 'editar_perfil' %}" class="btn btn-primary mt-3">Editar perfil</a>
+{% endblock %}

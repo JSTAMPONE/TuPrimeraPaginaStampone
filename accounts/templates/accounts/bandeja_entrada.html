@@ -1,0 +1,37 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}Bandeja de Entrada{% endblock %}
+
+{% block content %}
+  <h2>Mensajes recibidos</h2>
+
+  {% if mensajes %}
+    <ul>
+      {% for mensaje in mensajes %}
+        <li>
+          <strong>De:</strong> {{ mensaje.remitente.username }}<br>
+          <strong>Fecha:</strong> {{ mensaje.fecha_envio|date:"d/m/Y H:i" }}<br>
+          <strong>Contenido:</strong> {{ mensaje.cuerpo }}
+          <br>
+          <a href="{% url 'enviar_mensaje' %}?para={{ mensaje.remitente.username }}" class="btn btn-sm btn-primary mt-2">Responder</a>
+        </li>
+        <hr>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tenés mensajes.</p>
+  {% endif %}
+
+  <h2>Enviar mensaje a usuario</h2>
+  {% if usuarios %}
+    <ul>
+      {% for user in usuarios %}
+        <li>
+          <a href="{% url 'enviar_mensaje' %}?para={{ user.username }}">{{ user.username }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay otros usuarios disponibles para enviar mensajes.</p>
+  {% endif %}
+{% endblock %}
