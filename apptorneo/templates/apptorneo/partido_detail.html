@@ -9,6 +9,14 @@
     <p><strong>Goles Local:</strong> {{ detalle_partido.goles_local }}</p>
     <p><strong>Goles Visitante:</strong> {{ detalle_partido.goles_visitante }}</p>
 
+    {% if detalle_partido.descripcion %}
+        <p><strong>Descripción:</strong></p>
+        <div>
+            {{ detalle_partido.descripcion|safe }}
+        </div>
+    {% endif %}
+
+
     {% if detalle_partido.imagen %}
         <img src="{{ detalle_partido.imagen.url }}" alt="Imagen del partido" style="max-width: 400px;">
     {% else %}

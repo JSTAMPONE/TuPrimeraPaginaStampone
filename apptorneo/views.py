@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from.forms import EquipoForm, JugadorForm, PartidoForm, BusquedaJugadorForm
 from.models import Equipo, Jugador, Partido
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
@@ -12,14 +12,11 @@ def crear_equipo(request):
     if request.method == 'POST':
         form = EquipoForm(request.POST) 
         if form.is_valid(): 
-            nombre = form.cleaned_data['nombre'] 
-            año_fundacion = form.cleaned_data['año_fundacion']
-            equipo = Equipo(nombre=nombre, año_fundacion=año_fundacion)
-            equipo.save()
-            form = EquipoForm() 
-            return render(request, 'crear_equipo.html', {'form':form, 'mensaje': 'Equipo creado con éxito'})
-        else:
-            return render(request, 'crear_equipo.html', {'form': form}) 
+            form.save()
+            return render(request, 'crear_equipo.html', {
+                'form': EquipoForm(),
+                'mensaje': 'Equipo creado con éxito'
+            })
     else: 
         form = EquipoForm() 
     return render(request, 'crear_equipo.html', {'form': form})
@@ -80,7 +77,7 @@ class PartidoDetailView(DetailView):
     model = Partido
     context_object_name = 'detalle_partido'
 
-class PartidoUpdateView(UpdateView):
+class PartidoUpdateView(LoginRequiredMixin, UpdateView):
     model = Partido
     fields = ['local', 'visitante', 'fecha', 'goles_local', 'goles_visitante', 'imagen']
     template_name = 'apptorneo/editar_partido.html'
