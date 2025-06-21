@@ -12,3 +12,4 @@ Tecnologías utilizadas:
 - Bootstrap
 - SQLite
 - Pillow
+- CKEditor

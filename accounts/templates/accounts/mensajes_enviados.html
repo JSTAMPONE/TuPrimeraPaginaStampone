@@ -1,0 +1,26 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}Mensajes Enviados{% endblock %}
+
+{% block content %}
+  <h2>Mensajes enviados</h2>
+
+  {% if mensajes %}
+    <ul>
+      {% for mensaje in mensajes %}
+        <li>
+          <strong>Para:</strong> {{ mensaje.destinatario.username }}<br>
+          <strong>Fecha:</strong> {{ mensaje.fecha_envio|date:"d/m/Y H:i" }}<br>
+          <strong>Contenido:</strong> {{ mensaje.cuerpo }}
+          <br>
+          <a href="{% url 'ver_conversacion' mensaje.destinatario.username %}" class="btn btn-sm btn-secondary mt-2">Ver conversación</a>
+        </li>
+        <hr>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No enviaste mensajes todavía.</p>
+  {% endif %}
+
+  <a href="{% url 'bandeja_entrada' %}" class="btn btn-secondary">Volver a bandeja de entrada</a>
+{% endblock %}

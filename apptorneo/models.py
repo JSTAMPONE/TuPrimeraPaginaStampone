@@ -14,6 +14,9 @@ class Equipo(models.Model):
         if self.año_fundacion > timezone.now().year:
             raise ValidationError({'año_fundacion': 'El año de fundación no puede ser en el futuro.'})
 
+        if self.año_fundacion < 1800:
+            raise ValidationError({'año_fundacion': 'El año de fundación no puede ser menor a 1800.'})
+
         if Equipo.objects.exclude(pk=self.pk).filter(
             nombre__iexact=self.nombre,
             año_fundacion=self.año_fundacion

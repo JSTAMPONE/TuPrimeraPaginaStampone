@@ -5,6 +5,10 @@ class EquipoForm(forms.ModelForm):
     class Meta:
         model = Equipo
         fields = ('nombre', 'año_fundacion')
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'año_fundacion': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
 
 class JugadorForm(forms.ModelForm):
     class Meta:
@@ -23,12 +27,29 @@ class JugadorForm(forms.ModelForm):
                 'invalid': 'Ingrese un número válido.',
             },
         }
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellido': forms.TextInput(attrs={'class': 'form-control'}),
+            'equipo': forms.Select(attrs={'class': 'form-control'}),
+            'numero_camiseta': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
 
 class PartidoForm(forms.ModelForm):
     class Meta:
         model = Partido
         fields = ('local', 'visitante', 'fecha', 'goles_local', 'goles_visitante', 'imagen', 'descripcion')
-        widgets={'fecha': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M')}
+        widgets = {
+            'local': forms.Select(attrs={'class': 'form-control'}),
+            'visitante': forms.Select(attrs={'class': 'form-control'}),
+            'fecha': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}, format='%Y-%m-%dT%H:%M'),
+            'goles_local': forms.NumberInput(attrs={'class': 'form-control'}),
+            'goles_visitante': forms.NumberInput(attrs={'class': 'form-control'}),
+            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 
 class BusquedaJugadorForm(forms.Form):
-    nombre= forms.CharField()
+    nombre = forms.CharField(
+        label='Nombre del jugador',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )

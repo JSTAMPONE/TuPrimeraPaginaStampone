@@ -1,0 +1,32 @@
+{% extends 'apptorneo/base.html' %}
+
+{% block title %}Conversación con {{ otro_usuario.username }}{% endblock %}
+
+{% block content %}
+  <h2>Conversación con {{ otro_usuario.username }}</h2>
+
+  {% if mensajes %}
+    <ul>
+      {% for mensaje in mensajes %}
+        <li>
+          <strong>{% if mensaje.remitente == request.user %}Yo{% else %}{{ mensaje.remitente.username }}{% endif %}:</strong>
+          {{ mensaje.cuerpo }}
+          <br>
+          <small>{{ mensaje.fecha_envio|date:"d/m/Y H:i" }}</small>
+        </li>
+        <hr>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay mensajes con este usuario aún.</p>
+  {% endif %}
+
+  <h3>Enviar nuevo mensaje</h3>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="cuerpo" rows="4" cols="50" required></textarea><br>
+    <button type="submit" class="btn btn-primary mt-2">Enviar</button>
+  </form>
+
+  <a href="{% url 'bandeja_entrada' %}" class="btn btn-secondary mt-3">Volver a Bandeja de Entrada</a>
+{% endblock %}

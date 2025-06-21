@@ -11,6 +11,8 @@ from .models import Perfil, Mensaje
 from django.utils.decorators import method_decorator
 from django.views import View
 from .forms import UserForm, PerfilForm, MensajeForm
+from django.contrib import messages
+from django.db.models import Q
 
 class LoginView(LoginView):
     template_name = 'accounts/login.html'
@@ -51,7 +53,9 @@ class EditarPerfilView(View):
         if user_form.is_valid() and perfil_form.is_valid():
             user_form.save()
             perfil_form.save()
+            messages.success(request, 'Perfil actualizado correctamente.')
             return redirect('perfil')
+        messages.error(request, 'Hubo un error al actualizar tu perfil.')
         return render(request, 'accounts/editar_perfil.html', {
             'user_form': user_form,
             'perfil_form': perfil_form
@@ -75,7 +79,10 @@ def enviar_mensaje(request):
             mensaje = form.save(commit=False)
             mensaje.remitente = request.user
             mensaje.save()
+            messages.success(request, 'Mensaje enviado con éxito.')
             return redirect('bandeja_entrada')
+        else:
+            messages.error(request, 'No se pudo enviar el mensaje.')
     else:
         form = MensajeForm(initial=inicial, user=request.user)
 
@@ -84,5 +91,37 @@ def enviar_mensaje(request):
 @login_required
 def bandeja_entrada(request):
     mensajes = Mensaje.objects.filter(destinatario=request.user).order_by('-fecha_envio')
-    usuarios = User.objects.exclude(id=request.user.id)  # lista de otros usuarios para enviar mensaje
+    usuarios = User.objects.exclude(id=request.user.id).exclude(username='adminapptorneo')
     return render(request, 'accounts/bandeja_entrada.html', {'mensajes': mensajes, 'usuarios': usuarios})
+
+@login_required
+def mensajes_enviados(request):
+    mensajes = Mensaje.objects.filter(remitente=request.user).order_by('-fecha_envio')
+    return render(request, 'accounts/mensajes_enviados.html', {'mensajes': mensajes})
+
+@login_required
+def ver_conversacion(request, username):
+    otro_usuario = User.objects.get(username=username)
+    mensajes = Mensaje.objects.filter(
+        Q(remitente=request.user, destinatario=otro_usuario) | 
+        Q(remitente=otro_usuario, destinatario=request.user)
+    ).order_by('fecha_envio')
+
+    if request.method == 'POST':
+        cuerpo = request.POST.get('cuerpo')
+        if cuerpo:
+            Mensaje.objects.create(
+                remitente=request.user,
+                destinatario=otro_usuario,
+                asunto='Conversación',
+                cuerpo=cuerpo
+            )
+            messages.success(request, 'Mensaje enviado')
+            return redirect('ver_conversacion', username=otro_usuario.username)
+        else:
+            messages.error(request, 'El mensaje no puede estar vacío')
+
+    return render(request, 'accounts/conversacion.html', {
+        'mensajes': mensajes,
+        'otro_usuario': otro_usuario,
+    })

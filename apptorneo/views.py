@@ -4,6 +4,7 @@ from.models import Equipo, Jugador, Partido
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 def inicio(request):
     return render(request, 'inicio.html')
@@ -13,10 +14,8 @@ def crear_equipo(request):
         form = EquipoForm(request.POST) 
         if form.is_valid(): 
             form.save()
-            return render(request, 'crear_equipo.html', {
-                'form': EquipoForm(),
-                'mensaje': 'Equipo creado con éxito'
-            })
+            messages.success(request, 'Equipo creado con éxito')
+            return redirect('crear_equipo')
     else: 
         form = EquipoForm() 
     return render(request, 'crear_equipo.html', {'form': form})
@@ -25,37 +24,22 @@ def crear_jugador(request):
     if request.method == 'POST':
         form = JugadorForm(request.POST) 
         if form.is_valid(): 
-            nombre = form.cleaned_data['nombre']
-            apellido = form.cleaned_data['apellido']
-            equipo = form.cleaned_data['equipo']
-            numero_camiseta = form.cleaned_data['numero_camiseta']
-            jugador = Jugador(nombre=nombre, apellido=apellido, equipo=equipo, numero_camiseta=numero_camiseta)
-            jugador.save()
-            form = JugadorForm() 
-            return render(request, 'crear_jugador.html', {'form':form, 'mensaje': 'Jugador creado con éxito'})
-        else:
-            return render(request, 'crear_jugador.html', {'form': form}) 
-    else: 
-        form = JugadorForm() 
+            jugador = form.save()
+            messages.success(request, 'Jugador creado con éxito')
+            return redirect('crear_jugador')
+    else:
+        form = JugadorForm()
     return render(request, 'crear_jugador.html', {'form': form})
 
 def crear_partido(request):
     if request.method == 'POST':
         form = PartidoForm(request.POST, request.FILES)
         if form.is_valid(): 
-            local = form.cleaned_data['local']
-            visitante = form.cleaned_data['visitante']
-            fecha = form.cleaned_data['fecha']
-            goles_local = form.cleaned_data['goles_local']
-            goles_visitante = form.cleaned_data['goles_visitante']
-            partido = Partido(local=local, visitante=visitante, fecha=fecha, goles_local=goles_local, goles_visitante=goles_visitante)
-            partido.save()
-            form = PartidoForm() 
-            return render(request, 'crear_partido.html', {'form':form, 'mensaje': 'Partido creado con éxito'})
-        else:
-            return render(request, 'crear_partido.html', {'form': form}) 
+            form.save()
+            messages.success(request, 'Partido creado con éxito')
+            return redirect('crear_partido')
     else: 
-        form = PartidoForm() 
+        form = PartidoForm()
     return render(request, 'crear_partido.html', {'form': form})
 
 def buscar_jugador(request):
@@ -79,7 +63,7 @@ class PartidoDetailView(DetailView):
 
 class PartidoUpdateView(LoginRequiredMixin, UpdateView):
     model = Partido
-    fields = ['local', 'visitante', 'fecha', 'goles_local', 'goles_visitante', 'imagen']
+    form_class = PartidoForm
     template_name = 'apptorneo/editar_partido.html'
     context_object_name = 'editar_partido'
     success_url = '/'

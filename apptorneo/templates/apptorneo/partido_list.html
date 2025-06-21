@@ -14,10 +14,6 @@
             </a> |
             <a href="{% url 'editar_partido' partido.pk %}">Editar</a>
             <a href="{% url 'borrar_partido' partido.pk %}">Borrar</a>
-            {% if partido.imagen %}
-            <br>
-            <img src="{{ partido.imagen.url }}" alt="Imagen del partido" width="200">
-          {% endif %}
         </li>
       {% endfor %}
     </ul>

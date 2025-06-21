@@ -3,6 +3,7 @@
 {% block title %}Bandeja de Entrada{% endblock %}
 
 {% block content %}
+  <a href="{% url 'mensajes_enviados' %}" class="btn btn-secondary mb-3">Ver mensajes enviados</a>  
   <h2>Mensajes recibidos</h2>
 
   {% if mensajes %}
@@ -14,6 +15,7 @@
           <strong>Contenido:</strong> {{ mensaje.cuerpo }}
           <br>
           <a href="{% url 'enviar_mensaje' %}?para={{ mensaje.remitente.username }}" class="btn btn-sm btn-primary mt-2">Responder</a>
+          <a href="{% url 'ver_conversacion' mensaje.remitente.username %}" class="btn btn-sm btn-secondary mt-2">Ver conversación</a>
         </li>
         <hr>
       {% endfor %}
